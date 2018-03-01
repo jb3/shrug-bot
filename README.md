@@ -11,4 +11,4 @@ I was talking in my [lovely Python discord server](https://discord.gg/8NWhsvT) w
 4. Create an environment variable called `TOKEN` with your bots token
 5. Run `__main__.py`
 
-Easy peasy lemon squeasy.
+Easy peasy lemon squeezy.
