@@ -25,7 +25,7 @@ async def shrug(ctx, user : discord.Member = None):
     if user is None:
         user = ctx.author
     img1 = Image.open(fp=open("shrug.png", "rb"))
-    with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession() as session:
         avatar = await session.get(user.avatar_url_as(format="png"))
         data = await avatar.read()
         av_bytes = BytesIO(data)
