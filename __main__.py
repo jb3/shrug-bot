@@ -23,12 +23,7 @@ canvas = Image.open("shrug.png")
 bot = commands.Bot(command_prefix="!", pm_help=False, description=r"¯\_(ツ)_/¯")
 
 
-def draw_face(base: Image, avatar: Image, destination: tuple, size: tuple, rotation: int):
-    mask = Image.new("L", avatar.size, 0)
-    draw = ImageDraw.Draw(mask)
-    draw.ellipse((0, 0) + avatar.size, fill=255)
-    head = ImageOps.fit(avatar, mask.size, centering=(0.5, 0.5))
-    head.putalpha(mask)
+def draw_face(base: Image, head: Image, destination: tuple, size: tuple, rotation: int):
     face = head.resize(size, Image.LANCZOS)
     face = face.rotate(rotation, expand=True)
     base.paste(face, destination, face)
@@ -43,10 +38,15 @@ async def on_ready():
 async def shrug(ctx, user: discord.Member = None):
     base = canvas.copy()
     user = user or ctx.author
-    avatar = Image.open(BytesIO(await user.avatar_url.read()))
-    draw_face(base, avatar, (155, 70), (78, 78), 15)
-    draw_face(base, avatar, (351, 43), (36, 36), -4)
-    draw_face(base, avatar, (350, 225), (40, 40), 5)
+    head = Image.open(BytesIO(await user.avatar_url.read()))
+    mask = Image.new("L", head.size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.ellipse((0, 0) + head.size, fill=255)
+    head = ImageOps.fit(head, mask.size, centering=(0.5, 0.5))
+    head.putalpha(mask)
+    draw_face(base, head, (155, 70), (78, 78), 15)
+    draw_face(base, head, (351, 43), (36, 36), -4)
+    draw_face(base, head, (350, 225), (40, 40), 5)
     result = BytesIO()
     base.save(result, format="png")
     result.seek(0)
