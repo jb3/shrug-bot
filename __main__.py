@@ -26,7 +26,7 @@ async def shrug(ctx, user : discord.Member = None):
         user = ctx.author
     img1 = Image.open(fp=open("shrug.png", "rb"))
     async with aiohttp.ClientSession() as session:
-        avatar = await session.get(user.avatar_url_as(format="png"))
+        avatar = await session.get(str(user.avatar_url_as(format="png")))
         data = await avatar.read()
         av_bytes = BytesIO(data)
         avatar = Image.open(av_bytes)
@@ -72,6 +72,7 @@ async def shrug(ctx, user : discord.Member = None):
 
     processed = BytesIO()
     img1.save(processed, format="PNG")
-    await ctx.send(file=discord.File(fp=processed.getvalue(), filename="shrugged.png"))
+    processed.seek(0)
+    await ctx.send(file=discord.File(fp=processed, filename="shrugged.png"))
 
 bot.run(os.environ.get("TOKEN"))
